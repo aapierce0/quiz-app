@@ -1,6 +1,5 @@
-angular.module('QuizApp', []).controller('QuizController', ['$http', '$location', function($http, $location) {
-	window.$location = $location;
-	const path = $location.path();
+angular.module('QuizApp', []).controller('QuizController', ['$http', function($http) {
+	const path = window.location.pathname;
 	const pathComponents = path.split("/");
 	const quizSlug = pathComponents.pop();
 
