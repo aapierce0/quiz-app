@@ -2,7 +2,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 	const HOST_DOMAIN = `elginoscars.com`;
 	const COUCHDB_ROOT = `https://db.${HOST_DOMAIN}`;
 	const QUIZ_DATABASE_NAME = `quizzes`;
-	const QUIZ_ID = `disney-double`;
+	const QUIZ_ID = `disney-quiz`;
 	const QUIZ_DOC_ID = `quiz:${QUIZ_ID}`;
 
 	$http.get(`${COUCHDB_ROOT}/${QUIZ_DATABASE_NAME}/${QUIZ_DOC_ID}`).then((result) => {
