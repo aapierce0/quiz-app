@@ -13,7 +13,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		console.log(result);
 		this.description = JSON.stringify(result.data);
 		this.questions = result.data.questions;
-	})
+	});
 
 
 	// The title appears at the top of the quiz
@@ -25,16 +25,16 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		_.defaults(question, {"guesses": []});
 		question.guesses.push(question.input);
 		question.input = "";
-	}
+	};
 
 	// Evaluate one of the question's guesses
 	this.evaluateAnswer = function(question, guess) {
 		const solutions = question.solutions;
 		const allowedResponses = _.flatMap(solutions, (solution) => {
 			return _.union([solution.canonicalName], solution.alternatives);
-		})
-		return (_.some(allowedResponses, (allowedResponse) => { return allowedResponse == guess }));
-	}
+		});
+		return (_.some(allowedResponses, (allowedResponse) => { return allowedResponse === guess }));
+	};
 
 	// Submit the quiz to the database so that it can be shared!
 	this.submit = function() {
@@ -55,7 +55,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 			const sharableURL = `http://${HOST_DOMAIN}/?ref=${submissionID}`;
 			this.sharableURL = sharableURL;
 		})
-	}
+	};
 
 
 	const searchParams = parseQueryString(location.search);
@@ -74,7 +74,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		} else {
 			return [];
 		}
-	}
+	};
 
 	this.showTheirAnswersButtonTitle = function() {
 		if (this.competitor.name) {
@@ -84,6 +84,5 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		}
 	}
 
-
-}])
+}]);
 console.log("Loaded!");
