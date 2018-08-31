@@ -3,8 +3,8 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 	const pathComponents = path.split("/");
 	const quizSlug = pathComponents.pop();
 
-	const HOST_DOMAIN = `elginoscars.com`;
-	const COUCHDB_ROOT = `https://db.${HOST_DOMAIN}`;
+	const HOST_DOMAIN = window.location.host;
+	const COUCHDB_ROOT = window.couchDBRoot;
 	const QUIZ_DATABASE_NAME = `quizzes`;
 	const QUIZ_ID = quizSlug;
 	const QUIZ_DOC_ID = `quiz:${QUIZ_ID}`;
@@ -52,7 +52,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		};
 
 		$http.put(`${COUCHDB_ROOT}/${QUIZ_DATABASE_NAME}/submission:${submissionID}`, submission).then((result) => {
-			const sharableURL = `http://${HOST_DOMAIN}/?ref=${submissionID}`;
+			const sharableURL = `http://${HOST_DOMAIN}/${QUIZ_ID}?ref=${submissionID}`;
 			this.sharableURL = sharableURL;
 		})
 	};
