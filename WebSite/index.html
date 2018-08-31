@@ -1,0 +1,40 @@
+<html ng-app="QuizApp">
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js" integrity="sha256-/GKyJ0BQJD8c8UYgf7ziBrs/QgcikS7Fv/SaArgBcEI=" crossorigin="anonymous"></script>
+
+		<script type="text/javascript" src="/js/util.js"></script>
+		<script type="text/javascript" src="/js/controller.js"></script>
+	</head>
+
+	<body>
+		<div ng-controller="QuizController as quiz">
+			<h1>{{quiz.title}}</h1>
+			<div ng-repeat="question in quiz.questions">
+				{{question.content}}
+				<div ng-if="quiz.competitor">
+					<div ng-show="quiz.competitor.shownAnswers[$index]">
+						Their answers:
+						<ul>
+							<li ng-repeat="answer in quiz.theirAnswersForQuestion($index)">
+								{{answer}}
+							</li>
+					</div>
+					<div ng-hide="quiz.competitor.shownAnswers[$index]">
+						<button ng-click="quiz.competitor.shownAnswers[$index] = true">{{quiz.showTheirAnswersButtonTitle()}}</button>
+					</div>
+				</div>
+				<div ng-repeat="guess in question.guesses">{{guess}} ({{quiz.evaluateAnswer(question, guess)}})</div>
+				<form ng-submit="quiz.submitQuestion(question)">
+					<input ng-model="question.input" type="text" />
+					<input type="submit" />
+				</form>
+			</div>
+
+			<button ng-click="quiz.submit()">Submit all answers</button>
+			<div ng-if="quiz.sharableURL">
+				Share this URL to your friend! {{quiz.sharableURL}}
+			</div>
+		</div>
+	</body>
+</html>
