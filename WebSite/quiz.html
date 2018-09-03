@@ -15,10 +15,18 @@
 	</head>
 
 	<body>
-		<div ng-controller="QuizController as quiz">
-			<h1>{{quiz.title}}</h1>
-			<div ng-repeat="question in quiz.questions">
-				{{question.content}}
+		<div class="quiz" ng-controller="QuizController as quiz">
+			<header><h1>{{quiz.title}}</h1></header>
+			<div class="quiz-body">
+			<div class="question" ng-repeat="question in quiz.questions">
+				<h1>Question {{$index+1}}:</h1>
+				<p class="content">{{question.content}}</p>
+				<p class="number-of-answers"><span class="count">{{question.solutions.length}}</span> {{question.solutions.length === 1 ? "answer" : "answers"}}.</p>
+
+				<p class="number-of-competitor-guesses" ng-if="quiz.competitor">
+					They made <span class="count">{{quiz.theirAnswersForQuestion($index).length}}</span> guesses!
+				</p>
+
 				<div ng-if="quiz.competitor">
 					<div ng-show="quiz.competitor.shownAnswers[$index]">
 						Their answers:
@@ -31,8 +39,9 @@
 						<button ng-click="quiz.competitor.shownAnswers[$index] = true">{{quiz.showTheirAnswersButtonTitle()}}</button>
 					</div>
 				</div>
-				<div ng-repeat="guess in question.guesses">{{guess}} ({{quiz.evaluateAnswer(question, guess)}})</div>
-				<form ng-submit="quiz.submitQuestion(question)">
+
+				<div ng-repeat="guess in question.guesses">{{quiz.interpretCanonicalAnswer(question, guess)}} ({{quiz.evaluateAnswer(question, guess)}})</div>
+				<form ng-submit="quiz.submitQuestion(question)" ng-show="quiz.questionHasUnknownSolutions(question)">
 					<input ng-model="question.input" type="text" />
 					<input type="submit" />
 				</form>
@@ -41,6 +50,7 @@
 			<button ng-click="quiz.submit()">Submit all answers</button>
 			<div ng-if="quiz.sharableURL">
 				Share this URL to your friend! {{quiz.sharableURL}}
+			</div>
 			</div>
 		</div>
 	</body>

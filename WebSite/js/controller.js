@@ -11,6 +11,7 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 
 	$http.get(`${COUCHDB_ROOT}/${QUIZ_DATABASE_NAME}/${QUIZ_DOC_ID}`).then((result) => {
 		console.log(result);
+		this.title = result.data.title;
 		this.description = JSON.stringify(result.data);
 		this.questions = result.data.questions;
 	});
@@ -33,7 +34,26 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 		const allowedResponses = _.flatMap(solutions, (solution) => {
 			return _.union([solution.canonicalName], solution.alternatives);
 		});
-		return (_.some(allowedResponses, (allowedResponse) => { return allowedResponse === guess }));
+		return (_.some(allowedResponses, (allowedResponse) => { return _.toUpper(allowedResponse) === _.toUpper(guess) }));
+	};
+
+	this.guessIsValidForSolution = function(guess, solution) {
+    const allowedResponses = _.union([solution.canonicalName], solution.alternatives);
+    return (_.some(allowedResponses, (allowedResponse) => { return _.toUpper(allowedResponse) === _.toUpper(guess) }));
+	};
+
+	// Get the canonical answer for a given question
+	this.interpretCanonicalAnswer = function(question, guess) {
+		const solutions = question.solutions;
+		const acceptedSolution = _.find(solutions, (solution) => {
+			return this.guessIsValidForSolution(guess, solution);
+		});
+
+		if (_.isObjectLike(acceptedSolution)) {
+			return acceptedSolution.canonicalName;
+		} else {
+			return guess;
+		}
 	};
 
 	// Submit the quiz to the database so that it can be shared!
@@ -56,6 +76,14 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 			this.sharableURL = sharableURL;
 		})
 	};
+
+	this.questionHasUnknownSolutions = function(question) {
+    return !_.every(question.solutions, (solution) => {
+			return _.some(question.guesses, (guess) => {
+				return this.guessIsValidForSolution(guess, solution);
+			})
+    })
+  };
 
 
 	const searchParams = parseQueryString(location.search);
