@@ -28,6 +28,8 @@ app.use('/js', express.static(jsPath));
 const cssPath = Path.join(__dirname, 'WebSite', 'css');
 app.use('/css', express.static(cssPath));
 
+const imgPath = Path.join(__dirname, 'WebSite', 'img');
+app.use('/img', express.static(imgPath));
 
 // The root path goes to index.html
 app.all('/', function (request, response, next) {

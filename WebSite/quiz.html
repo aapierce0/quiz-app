@@ -27,7 +27,16 @@
 					They made <span class="count">{{quiz.theirAnswersForQuestion($index).length}}</span> guesses!
 				</p>
 
-				<div ng-if="quiz.competitor">
+				<div ng-repeat="guess in question.guesses">
+					{{quiz.interpretCanonicalAnswer(question, guess)}}
+					<img src="/img/RedX.svg" ng-show="!quiz.evaluateAnswer(question, guess)"/>
+				</div>
+				<form ng-submit="quiz.submitQuestion(question)" ng-show="quiz.questionHasUnknownSolutions(question)">
+					<input ng-model="question.input" type="text" />
+					<input type="submit" />
+				</form>
+
+				<div ng-if="quiz.competitor" ng-hide="quiz.questionHasUnknownSolutions(question)">
 					<div ng-show="quiz.competitor.shownAnswers[$index]">
 						Their answers:
 						<ul>
@@ -39,12 +48,6 @@
 						<button ng-click="quiz.competitor.shownAnswers[$index] = true">{{quiz.showTheirAnswersButtonTitle()}}</button>
 					</div>
 				</div>
-
-				<div ng-repeat="guess in question.guesses">{{quiz.interpretCanonicalAnswer(question, guess)}} ({{quiz.evaluateAnswer(question, guess)}})</div>
-				<form ng-submit="quiz.submitQuestion(question)" ng-show="quiz.questionHasUnknownSolutions(question)">
-					<input ng-model="question.input" type="text" />
-					<input type="submit" />
-				</form>
 			</div>
 
 			<button ng-click="quiz.submit()">Submit all answers</button>
