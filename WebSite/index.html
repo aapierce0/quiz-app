@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <script src="/db_connection.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js" integrity="sha256-/GKyJ0BQJD8c8UYgf7ziBrs/QgcikS7Fv/SaArgBcEI=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="/js/util.js"></script>
+    <script type="text/javascript" src="/js/controller.js"></script>
 </head>
 <body>
 
-List of all quizzes!
+<div class="quiz-list" ng-controller="QuizListController as quizList">
+    <p>Output: {{quizList.output}}</p>
+
+    <p>Quizzes:</p>
+    <ul>
+        <li ng-repeat="quiz in quizList.quizzes">{{quiz.title}} ({{quiz.numberOfQuestions}} questions) <a ng-href="{{quiz.href}}">link</a></li>
+    </ul>
+</div>
 
 </body>
 </html>

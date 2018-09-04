@@ -18,42 +18,43 @@
 		<div class="quiz" ng-controller="QuizController as quiz">
 			<header><h1>{{quiz.title}}</h1></header>
 			<div class="quiz-body">
-			<div class="question" ng-repeat="question in quiz.questions">
-				<h1>Question {{$index+1}}:</h1>
-				<p class="content">{{question.content}}</p>
-				<p class="number-of-answers"><span class="count">{{question.solutions.length}}</span> {{question.solutions.length === 1 ? "answer" : "answers"}}.</p>
+				<div class="question" ng-repeat="question in quiz.questions">
+					<h1>Question {{$index+1}}:</h1>
+					<p class="content">{{question.content}}</p>
+					<p class="number-of-answers"><span class="count">{{question.solutions.length}}</span> {{question.solutions.length === 1 ? "answer" : "answers"}}.</p>
 
-				<p class="number-of-competitor-guesses" ng-if="quiz.competitor">
-					They made <span class="count">{{quiz.theirAnswersForQuestion($index).length}}</span> guesses!
-				</p>
+					<p class="number-of-competitor-guesses" ng-if="quiz.competitor">
+						They made <span class="count">{{quiz.theirAnswersForQuestion($index).length}}</span> guesses!
+					</p>
 
-				<div ng-repeat="guess in question.guesses">
-					{{quiz.interpretCanonicalAnswer(question, guess)}}
-					<img src="/img/RedX.svg" ng-show="!quiz.evaluateAnswer(question, guess)"/>
-				</div>
-				<form ng-submit="quiz.submitQuestion(question)" ng-show="quiz.questionHasUnknownSolutions(question)">
-					<input ng-model="question.input" type="text" />
-					<input type="submit" />
-				</form>
-
-				<div ng-if="quiz.competitor" ng-hide="quiz.questionHasUnknownSolutions(question)">
-					<div ng-show="quiz.competitor.shownAnswers[$index]">
-						Their answers:
-						<ul>
-							<li ng-repeat="answer in quiz.theirAnswersForQuestion($index)">
-								{{answer}}
-							</li>
+					<div ng-repeat="guess in question.guesses">
+						{{quiz.interpretCanonicalAnswer(question, guess)}}
+						<img src="/img/RedX.svg" ng-show="!quiz.evaluateAnswer(question, guess)"/>
 					</div>
-					<div ng-hide="quiz.competitor.shownAnswers[$index]">
-						<button ng-click="quiz.competitor.shownAnswers[$index] = true">{{quiz.showTheirAnswersButtonTitle()}}</button>
+					<form ng-submit="quiz.submitQuestion(question)" ng-show="quiz.questionHasUnknownSolutions(question)">
+						<input ng-model="question.input" type="text" />
+						<input type="submit" />
+					</form>
+
+					<div ng-if="quiz.competitor" ng-hide="quiz.questionHasUnknownSolutions(question)">
+						<div ng-show="quiz.competitor.shownAnswers[$index]">
+							Their answers:
+							<ul>
+								<li ng-repeat="answer in quiz.theirAnswersForQuestion($index)">
+									{{answer}}
+								</li>
+							</ul>
+						</div>
+						<div ng-hide="quiz.competitor.shownAnswers[$index]">
+							<button ng-click="quiz.competitor.shownAnswers[$index] = true">{{quiz.showTheirAnswersButtonTitle()}}</button>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<button ng-click="quiz.submit()">Submit all answers</button>
-			<div ng-if="quiz.sharableURL">
-				Share this URL to your friend! {{quiz.sharableURL}}
-			</div>
+				<button ng-click="quiz.submit()">Submit all answers</button>
+				<div ng-if="quiz.sharableURL">
+					Share this URL to your friend! {{quiz.sharableURL}}
+				</div>
 			</div>
 		</div>
 	</body>

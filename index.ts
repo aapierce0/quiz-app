@@ -1,4 +1,5 @@
 import * as express from "express";
+import lessMiddleware = require("less-middleware");
 import * as Path from "path";
 import * as request from "request";
 import * as chalk from "chalk";
@@ -147,6 +148,7 @@ function configureApplication(app: express.Application, args: LaunchOptions.Argu
 
     // Assign the static css library path
     const cssPath = Path.join(__dirname, 'WebSite', 'css');
+    app.use('/css', lessMiddleware(cssPath));
     app.use('/css', express.static(cssPath));
 
     // Route all requests to images to the img directory

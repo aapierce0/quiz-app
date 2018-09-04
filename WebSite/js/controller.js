@@ -1,12 +1,13 @@
-angular.module('QuizApp', []).controller('QuizController', ['$http', function($http) {
+const HOST_DOMAIN = window.location.host;
+const COUCHDB_ROOT = window.couchDBRoot;
+const QUIZ_DATABASE_NAME = `quizzes`;
+
+const app = angular.module('QuizApp', []);
+
+app.controller('QuizController', ['$http', function($http) {
 	const path = window.location.pathname;
 	const pathComponents = path.split("/");
-	const quizSlug = pathComponents.pop();
-
-	const HOST_DOMAIN = window.location.host;
-	const COUCHDB_ROOT = window.couchDBRoot;
-	const QUIZ_DATABASE_NAME = `quizzes`;
-	const QUIZ_ID = quizSlug;
+	const QUIZ_ID = pathComponents.pop();
 	const QUIZ_DOC_ID = `quiz:${QUIZ_ID}`;
 
 	$http.get(`${COUCHDB_ROOT}/${QUIZ_DATABASE_NAME}/${QUIZ_DOC_ID}`).then((result) => {
@@ -113,4 +114,24 @@ angular.module('QuizApp', []).controller('QuizController', ['$http', function($h
 	}
 
 }]);
-console.log("Loaded!");
+
+app.controller('QuizListController', ['$http', function($http) {
+
+	this.quizzes = [];
+	this.output = "";
+
+	this.reloadQuizzes = function() {
+    $http.get(`${COUCHDB_ROOT}/${QUIZ_DATABASE_NAME}/_design/quizzes/_view/list_quizzes`).then((result) => {
+    	const rows = result.data.rows;
+    	this.quizzes = rows.map((row) => {
+    		let quiz = row.value;
+    		quiz.href = `/${row.key}`;
+    		return quiz;
+    	});
+      this.output = JSON.stringify(result.data.rows);
+    });
+	};
+
+	this.reloadQuizzes();
+
+}]);
