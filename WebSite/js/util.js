@@ -33,3 +33,7 @@ function parseQueryString(query) {
 	}
 	return query_string;
 }
+
+function caseInsensitiveCompare(lhs, rhs) {
+	return _.toUpper(lhs) === _.toUpper(rhs);
+}
